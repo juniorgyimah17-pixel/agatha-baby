@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cyber Lab Client</title><style>body{font-family:Arial,sans-serif;background:#f6edf2;color:#3c2430;padding:24px}.card{max-width:680px;margin:auto;background:#fff;padding:28px;border-radius:18px;box-shadow:0 12px 40px #0002}button{padding:14px 20px;border:0;border-radius:12px;background:#7b2948;color:#fff;font-weight:700}code{word-break:break-all}</style></head>
+<body><main class="card"><h1>Authorized Cybersecurity Lab</h1><p>This page generates <b>synthetic</b> call-log records for your private two-phone lab. It never reads the device call history.</p><button id="send">Generate &amp; send test records</button><p id="status"></p></main><script>
+const RECEIVER='http://10.119.176.166:8080/upload';
+function fakeRecords(){const now=Date.now();return [
+ {number:'+233 24 000 1001',type:'INCOMING',date:now-3600000,durationSeconds:42},
+ {number:'+233 55 000 2002',type:'OUTGOING',date:now-7200000,durationSeconds:118},
+ {number:'+233 20 000 3003',type:'MISSED',date:now-10800000,durationSeconds:0}
+]}
+document.getElementById('send').onclick=async()=>{const status=document.getElementById('status');status.textContent='Sending synthetic records…';try{const r=await fetch(RECEIVER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({device:'Training Phone B',synthetic:true,records:fakeRecords()})});status.textContent=r.ok?'Sent successfully to Phone A.':'Receiver returned HTTP '+r.status;}catch(e){status.textContent='Connection failed. Check that Phone A is running the receiver and both phones are on the same network.'}};
+</script></body></html>
